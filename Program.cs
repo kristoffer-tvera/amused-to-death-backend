@@ -1,9 +1,18 @@
+using AmusedToDeath.Backend.Endpoints;
+using AmusedToDeath.Backend.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
+builder.Services.AddLogging(opt =>
+    opt.AddConfiguration(builder.Configuration.GetSection("Logging"))
+        .AddConsole()
+        .AddSentry()
+);
 
 var app = builder.Build();
 
@@ -16,29 +25,21 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.UseCors(policy =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    policy.AllowAnyHeader();
+    policy.AllowAnyMethod();
+    policy.AllowAnyOrigin();
+});
 
-app.MapGet("/weatherforecast", () =>
+app.MapRaidEndpoints();
+app.MapUserEndpoints();
+app.MapApplicationEndpoints();
+
+using (var scope = app.Services.CreateScope())
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    var sampleService = scope.ServiceProvider.GetRequiredService<DbService>();
+    sampleService.Initialize().Wait();
+}
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
