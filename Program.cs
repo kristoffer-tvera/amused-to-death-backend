@@ -1,5 +1,9 @@
+using System.Text;
 using AmusedToDeath.Backend.Endpoints;
 using AmusedToDeath.Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +12,30 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
+builder.Services.AddHttpClient();
 builder.Services.AddLogging(opt =>
     opt.AddConfiguration(builder.Configuration.GetSection("Logging"))
         .AddConsole()
         .AddSentry()
 );
+builder.Services.AddTransient<DbService>();
+builder.Services.AddTransient<TokenService>();
+builder.Services.AddTransient<BattleNetService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "default_key")),
+        };
+    });
 
 var app = builder.Build();
 
@@ -35,6 +58,10 @@ app.UseCors(policy =>
 app.MapRaidEndpoints();
 app.MapUserEndpoints();
 app.MapApplicationEndpoints();
+app.MapGet("/bnet", () =>
+{
+    return Results.Redirect("https://oauth.battle.net/authorize?response_type=code&scope=openid&state=69&redirect_uri=http://localhost:5281/battle-net-redirect&client_id=8183bda55fd54566827c595947b189fe");
+});
 
 using (var scope = app.Services.CreateScope())
 {

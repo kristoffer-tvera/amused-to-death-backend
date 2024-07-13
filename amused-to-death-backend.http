@@ -1,6 +1,24 @@
 @amused_to_death_backend_HostAddress = http://localhost:5281
+@oauthToken = EUOL6XDx5G39OIZcYENBHM3iwt0yXcogh3
 
 GET {{amused_to_death_backend_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST https://oauth.battle.net/token
+Authorization: Basic 8183bda55fd54566827c595947b189fe:ghP3PV06BDPRHUIk16HIqV8ZYgFy43nf
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&redirect_uri=http://localhost:5281/battle-net-redirect&code=EUVTCPLD5HPAJGT7QE75WIHDYQ2JGNAJUD
+
+###
+
+GET https://oauth.battle.net/userinfo
+Authorization: Bearer {{oauthToken}}
+
+
+###
+
+GET https://eu.api.blizzard.com/profile/user/wow?namespace=profile-eu&locale=en_GB?access_token={{oauthToken}}
+Authorization: Bearer {{oauthToken}}
