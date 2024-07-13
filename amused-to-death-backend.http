@@ -1,0 +1,6 @@
+@amused_to_death_backend_HostAddress = http://localhost:5281
+
+GET {{amused_to_death_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
