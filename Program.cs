@@ -2,7 +2,6 @@ using System.Text;
 using AmusedToDeath.Backend.Endpoints;
 using AmusedToDeath.Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);

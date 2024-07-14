@@ -34,13 +34,14 @@ public class BattleNetService(HttpClient httpClient, ILogger<BattleNetService> l
         {
             ["grant_type"] = "authorization_code",
             ["code"] = code,
-            ["redirect_uri"] = "http://localhost:5281/battle-net-redirect"
+            ["redirect_uri"] = "http://localhost:5173/auth"
         })
         );
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogError($"Failed to get access token. Status code: {response.StatusCode}");
+            var responseMessage = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Failed to get access token. Status code: {response.StatusCode}, response: {responseMessage}");
         }
 
         var tokenResponse = await response.Content.ReadFromJsonAsync<BattleNetTokenResponse>();

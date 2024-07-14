@@ -6,8 +6,9 @@ namespace AmusedToDeath.Backend.Models;
 public class User
 {
     public int Id { get; set; }
-    public int Officer { get; set; }
+    public bool Officer { get; set; }
     public string BattleTag { get; set; }
 
-    public List<Character> Characters { get; set; }
+    [Computed]
+    public virtual ICollection<Character> Characters { get; set; }
 }

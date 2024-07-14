@@ -9,7 +9,7 @@ public class RaidAttendance
     public int RaidId { get; set; }
     public int CharacterId { get; set; }
     public int BossesKilled { get; set; }
-    public int Paid { get; set; }
+    public bool Paid { get; set; }
     public DateTime AddedDate { get; set; }
     public DateTime ChangedDate { get; set; }
 }

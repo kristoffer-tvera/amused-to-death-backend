@@ -1,8 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 using AmusedToDeath.Backend.Models;
 using AmusedToDeath.Backend.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AmusedToDeath.Backend.Endpoints;
 
@@ -10,9 +8,9 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        app.MapGet("/battle-net-redirect", async (DbService dbService, BattleNetService battleNetService, TokenService tokenService, string code, string state) =>
+        app.MapPost("/login", async (DbService dbService, BattleNetService battleNetService, TokenService tokenService, LoginRequest loginRequest) =>
         {
-            var accessToken = await battleNetService.GetAccessToken(code);
+            var accessToken = await battleNetService.GetAccessToken(loginRequest.Code);
             if (string.IsNullOrEmpty(accessToken))
             {
                 return Results.BadRequest();

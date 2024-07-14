@@ -9,7 +9,7 @@ public class Raid
     public string Name { get; set; }
     public DateTime Date { get; set; }
     public int Gold { get; set; }
-    public int Paid { get; set; }
+    public bool Paid { get; set; }
     public string Comment { get; set; }
     public DateTime AddedDate { get; set; }
     public DateTime ChangedDate { get; set; }

@@ -23,8 +23,10 @@ public class TokenService
         {
             Subject = new ClaimsIdentity(
             [
-                new Claim(ClaimTypes.Name, user.Id.ToString()),
-                new Claim("access-token", accessToken)
+                new Claim(ClaimTypes.Name, user.BattleTag),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Officer ? "Officer" : "Member"),
+                new Claim("access_token", accessToken)
             ]),
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
