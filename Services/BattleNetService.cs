@@ -86,4 +86,22 @@ public class BattleNetService(HttpClient httpClient, ILogger<BattleNetService> l
 
         return profile;
     }
+
+    public async Task<GuildRosterResponse> GetGuildRosterAsync(string accessToken, string realm, string guildName)
+    {
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        var response = await _httpClient.GetAsync($"https://eu.api.blizzard.com/data/wow/guild/{realm}/{guildName}/roster?namespace=profile-eu&locale=en_GB");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseMessage = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Failed to get guild roster. Status code: {response.StatusCode}, response: {responseMessage}");
+            return null;
+        }
+
+        var roster = await response.Content.ReadFromJsonAsync<GuildRosterResponse>();
+
+        return roster;
+    }
 }
