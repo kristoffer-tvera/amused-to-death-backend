@@ -2,9 +2,12 @@ using System.Text.Json.Serialization;
 
 namespace AmusedToDeath.Backend.Models;
 
+public record WowProfileResponse(
+    [property: JsonPropertyName("id")] int? Id,
+    [property: JsonPropertyName("wow_accounts")] IReadOnlyList<WowAccount> WowAccounts
+);
+
 public record ProfileCharacter(
-    [property: JsonPropertyName("character")] Key Character,
-    [property: JsonPropertyName("protected_character")] Key ProtectedCharacter,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("id")] int? Id,
     [property: JsonPropertyName("realm")] Realm Realm,
@@ -25,45 +28,22 @@ public record Gender(
     [property: JsonPropertyName("name")] object Name
 );
 
-public record Key(
-    [property: JsonPropertyName("href")] string Href
-);
-
-public record Links(
-    [property: JsonPropertyName("self")] Key Self,
-    [property: JsonPropertyName("user")] User User,
-    [property: JsonPropertyName("profile")] Profile Profile
-);
-
 public record PlayableClass(
-    [property: JsonPropertyName("key")] Key Key,
     [property: JsonPropertyName("name")] object Name,
     [property: JsonPropertyName("id")] int? Id
 );
 
 public record PlayableRace(
-    [property: JsonPropertyName("key")] Key Key,
     [property: JsonPropertyName("name")] object Name,
     [property: JsonPropertyName("id")] int? Id
 );
 
-public record Profile(
-    [property: JsonPropertyName("href")] string Href
-);
-
 public record Realm(
-    [property: JsonPropertyName("key")] Key Key,
     [property: JsonPropertyName("name")] object Name,
     [property: JsonPropertyName("id")] int? Id,
     [property: JsonPropertyName("slug")] string Slug
 );
 
-public record WowProfileResponse(
-    [property: JsonPropertyName("_links")] Links Links,
-    [property: JsonPropertyName("id")] int? Id,
-    [property: JsonPropertyName("wow_accounts")] IReadOnlyList<WowAccount> WowAccounts,
-    [property: JsonPropertyName("collections")] Key Collections
-);
 
 public record WowAccount(
     [property: JsonPropertyName("id")] int? Id,

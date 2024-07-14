@@ -21,6 +21,7 @@ builder.Services.AddTransient<DbService>();
 builder.Services.AddTransient<TokenService>();
 builder.Services.AddTransient<BattleNetService>();
 
+builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -54,13 +55,18 @@ app.UseCors(policy =>
     policy.AllowAnyOrigin();
 });
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapApplicationEndpoints();
+app.MapCharacterEndPoints();
 app.MapRaidEndpoints();
 app.MapUserEndpoints();
-app.MapApplicationEndpoints();
-app.MapGet("/bnet", () =>
-{
-    return Results.Redirect("https://oauth.battle.net/authorize?response_type=code&scope=openid&state=69&redirect_uri=http://localhost:5281/battle-net-redirect&client_id=8183bda55fd54566827c595947b189fe");
-});
+
+// app.MapGet("/bnet", () =>
+// {
+//     return Results.Redirect("https://oauth.battle.net/authorize?response_type=code&scope=openid&state=69&redirect_uri=http://localhost:5281/battle-net-redirect&client_id=8183bda55fd54566827c595947b189fe");
+// });
 
 using (var scope = app.Services.CreateScope())
 {

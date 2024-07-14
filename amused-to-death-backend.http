@@ -1,8 +1,10 @@
 @amused_to_death_backend_HostAddress = http://localhost:5281
 @oauthToken = EUOL6XDx5G39OIZcYENBHM3iwt0yXcogh3
+@bearerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImJ6bCMyNDI5IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMSIsInJvbGUiOiJNZW1iZXIiLCJhY2Nlc3NfdG9rZW4iOiJFVXg5UDJwY21tMmJkaDRsRGtEQjFCQ3ZrOVpuRXRBcTV4IiwibmJmIjoxNzIwOTg4Njk2LCJleHAiOjE3MjA5OTIyOTYsImlhdCI6MTcyMDk4ODY5NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MjgxLyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTE3My8ifQ.yI8z1WP72vGK6zY7ZeCU_oxLI8Klyw8AK1kxwcquSoU
 
-GET {{amused_to_death_backend_HostAddress}}/weatherforecast/
+GET {{amused_to_death_backend_HostAddress}}/characters/
 Accept: application/json
+Authorization: Bearer {{bearerToken}}
 
 ###
 
@@ -22,3 +24,10 @@ Authorization: Bearer {{oauthToken}}
 
 GET https://eu.api.blizzard.com/profile/user/wow?namespace=profile-eu&locale=en_GB?access_token={{oauthToken}}
 Authorization: Bearer {{oauthToken}}
+
+### 
+GET {{amused_to_death_backend_HostAddress}}/bnet-profile
+Accept: application/json
+Authorization: Bearer {{bearerToken}}
+
+###

@@ -36,6 +36,8 @@ public static class ApplicationEndpoints
 
         app.MapPost("/applications", async (DbService dbService, Application application) =>
         {
+            application.AddedDate = DateTime.UtcNow;
+            application.ChangedDate = DateTime.UtcNow;
             return await dbService.Insert(application);
         })
         .WithName("Create application")

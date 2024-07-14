@@ -3,11 +3,14 @@ using Dapper.Contrib.Extensions;
 namespace AmusedToDeath.Backend.Models;
 
 [Table("Users")]
-public class User
+public class User : BaseEntity
 {
-    public int Id { get; set; }
     public bool Officer { get; set; }
     public string BattleTag { get; set; }
+    public int? PrimaryCharacterId { get; set; }
+
+    [Computed]
+    public Character PrimaryCharacter { get; set; }
 
     [Computed]
     public virtual ICollection<Character> Characters { get; set; }

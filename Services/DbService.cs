@@ -18,7 +18,10 @@ public class DbService(IConfiguration configuration)
             CREATE TABLE IF NOT EXISTS Users (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Officer INTEGER DEFAULT 0,
-                BattleTag TEXT NOT NULL
+                BattleTag TEXT NOT NULL,
+                PrimaryCharacterId INTEGER,
+                AddedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+                ChangedDate DATETIME DEFAULT CURRENT_TIMESTAMP
             );
 
             CREATE TABLE IF NOT EXISTS Characters (

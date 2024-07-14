@@ -3,9 +3,8 @@ using Dapper.Contrib.Extensions;
 namespace AmusedToDeath.Backend.Models;
 
 [Table("Applications")]
-public class Application
+public class Application : BaseEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; }
     public string Class { get; set; }
     public string Spec { get; set; }
@@ -15,6 +14,4 @@ public class Application
     public string Comment { get; set; }
     public string Alts { get; set; }
     public string ChangeKey { get; set; }
-    public DateTime AddedDate { get; set; }
-    public DateTime ChangedDate { get; set; }
 }

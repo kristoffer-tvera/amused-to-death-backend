@@ -34,6 +34,9 @@ public static class RaidEndpoints
 
         app.MapPost("/raids", async (DbService dbService, Raid raid) =>
         {
+
+            raid.AddedDate = DateTime.UtcNow;
+            raid.ChangedDate = DateTime.UtcNow;
             return await dbService.Insert(raid);
         })
         .WithName("CreateRaid")

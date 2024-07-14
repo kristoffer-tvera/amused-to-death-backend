@@ -77,7 +77,8 @@ public class BattleNetService(HttpClient httpClient, ILogger<BattleNetService> l
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogError($"Failed to get profile. Status code: {response.StatusCode}");
+            var responseMessage = await response.Content.ReadAsStringAsync();
+            _logger.LogError($"Failed to get profile. Status code: {response.StatusCode}, response: {responseMessage}");
             return null;
         }
 

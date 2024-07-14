@@ -28,6 +28,8 @@ public class TokenService
                 new Claim(ClaimTypes.Role, user.Officer ? "Officer" : "Member"),
                 new Claim("access_token", accessToken)
             ]),
+            Audience = _config["Jwt:Audience"],
+            Issuer = _config["Jwt:Issuer"],
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };

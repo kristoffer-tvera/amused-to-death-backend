@@ -22,10 +22,10 @@ public static class UserEndpoints
                 return Results.BadRequest();
             }
 
-            var user = await dbService.Get<User>(userInfo.Id);
+            var user = await dbService.GetByQuerySingle<User>("SELECT * FROM Users WHERE BattleTag = @BattleTag", new { userInfo.BattleTag });
             if (user == null)
             {
-                user = new User { Id = userInfo.Id, BattleTag = userInfo.BattleTag };
+                user = new User { BattleTag = userInfo.BattleTag };
                 user.Id = await dbService.Insert(user);
             }
 
@@ -38,70 +38,22 @@ public static class UserEndpoints
         .WithOpenApi()
         .AllowAnonymous();
 
-
-        app.MapGet("/characters", async (DbService dbService, ClaimsPrincipal userClaim) =>
+        app.MapGet("/bnet-profile", async (BattleNetService battleNetService, ClaimsPrincipal userClaim) =>
         {
-            var user = userClaim.Identity.Name;
-            return await dbService.GetAll<Character>();
-        })
-        .WithName("Get all characters")
-        .Produces<List<Character>>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithOpenApi()
-        .WithTags("Characters")
-        .RequireAuthorization();
+            var accessToken = userClaim.GetAccessToken();
+            if (accessToken == null)
+            {
+                return Results.BadRequest();
+            }
 
-        app.MapGet("/characters/{id}", async (DbService dbService, int id) =>
-        {
-            return await dbService.Get<Character>(id);
+            var profileData = await battleNetService.GetProfileAsync(accessToken);
+            return Results.Ok(profileData);
         })
-        .WithName("Get character by id")
-        .Produces<Character>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithOpenApi()
-        .WithTags("Characters")
-        .RequireAuthorization();
-
-        app.MapPost("/characters", async (DbService dbService, Character character, ClaimsPrincipal userClaim) =>
-        {
-            var user = dbService.Get<User>(int.Parse(userClaim.Identity.Name));
-            return await dbService.Insert(character);
-        })
-        .WithName("Create character")
-        .Produces<Character>(StatusCodes.Status201Created)
+        .WithName("Get BattleNet profile data")
+        .Produces<WowProfileResponse>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status500InternalServerError)
         .WithOpenApi()
-        .WithTags("Characters")
         .RequireAuthorization();
-
-        app.MapPut("/characters/{id}", async (DbService dbService, int id, Character character) =>
-        {
-            return await dbService.Update(character);
-        })
-        .WithName("Update character")
-        .Produces(StatusCodes.Status204NoContent)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithOpenApi()
-        .WithTags("Characters")
-        .RequireAuthorization();
-
-        app.MapDelete("/characters/{id}", async (DbService dbService, int id) =>
-        {
-            return await dbService.Delete(new Character { Id = id });
-        })
-        .WithName("Delete character")
-        .Produces(StatusCodes.Status204NoContent)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithOpenApi()
-        .WithTags("Characters")
-        .RequireAuthorization();
-
-
-
     }
 }
