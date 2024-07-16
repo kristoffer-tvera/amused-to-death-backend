@@ -18,7 +18,7 @@ builder.Services.AddLogging(opt =>
         .AddSentry()
 );
 builder.Services.AddTransient<DbService>();
-builder.Services.AddTransient<TokenService>();
+builder.Services.AddSingleton<TokenService>();
 builder.Services.AddTransient<BattleNetService>();
 
 builder.Services.AddAuthorization();

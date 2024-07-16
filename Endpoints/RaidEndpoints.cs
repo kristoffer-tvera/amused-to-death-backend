@@ -1,5 +1,6 @@
 using AmusedToDeath.Backend.Models;
 using AmusedToDeath.Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AmusedToDeath.Backend.Endpoints;
 
@@ -32,7 +33,7 @@ public static class RaidEndpoints
         .RequireAuthorization();
 
 
-        app.MapPost("/raids", async (DbService dbService, Raid raid) =>
+        app.MapPost("/raids", async (DbService dbService, [FromBody] Raid raid) =>
         {
 
             raid.AddedDate = DateTime.UtcNow;
@@ -45,7 +46,8 @@ public static class RaidEndpoints
         .Produces(StatusCodes.Status500InternalServerError)
         .WithOpenApi()
         .WithTags("Raids")
-        .RequireAuthorization("officer");
+        .RequireAuthorization();
+        // .RequireAuthorization("officer");
 
         app.MapPut("/raids/{id}", async (DbService dbService, int id, Raid raid) =>
         {
@@ -58,7 +60,8 @@ public static class RaidEndpoints
         .Produces(StatusCodes.Status500InternalServerError)
         .WithOpenApi()
         .WithTags("Raids")
-        .RequireAuthorization("officer");
+        .RequireAuthorization();
+        // .RequireAuthorization("officer");
 
         app.MapDelete("/raids/{id}", async (DbService dbService, int id) =>
         {
@@ -70,7 +73,8 @@ public static class RaidEndpoints
         .Produces(StatusCodes.Status500InternalServerError)
         .WithOpenApi()
         .WithTags("Raids")
-        .RequireAuthorization("officer");
+        .RequireAuthorization();
+        // .RequireAuthorization("officer");
 
     }
 

@@ -31,6 +31,25 @@ public static class CharacterEndPoints
         .WithTags("Characters")
         .RequireAuthorization();
 
+        app.MapGet("/characters/my", async (DbService dbService, ClaimsPrincipal userClaim) =>
+        {
+            var userId = userClaim.GetUserId();
+            if (userId == null)
+            {
+                return Results.BadRequest();
+            }
+
+            var character = await dbService.GetByQuery<Character>($"SELECT * FROM Characters WHERE OwnerId = {userId.Value}");
+            return Results.Ok(character);
+        })
+        .WithName("Get MY characterS")
+        .Produces<List<Character>>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithOpenApi()
+        .WithTags("Characters")
+        .RequireAuthorization();
+
         app.MapPost("/characters", async (DbService dbService, Character character, ClaimsPrincipal userClaim) =>
         {
             var userId = userClaim.GetUserId();
