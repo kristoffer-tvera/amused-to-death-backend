@@ -38,7 +38,8 @@ public static class RaidEndpoints
 
             raid.AddedDate = DateTime.UtcNow;
             raid.ChangedDate = DateTime.UtcNow;
-            return await dbService.Insert(raid);
+            var id = await dbService.Insert(raid);
+            return Results.Ok(id);
         })
         .WithName("CreateRaid")
         .Produces<Raid>(StatusCodes.Status201Created)
@@ -51,7 +52,8 @@ public static class RaidEndpoints
 
         app.MapPut("/raids/{id}", async (DbService dbService, int id, Raid raid) =>
         {
-            return await dbService.Update(raid);
+            await dbService.Update(raid);
+            return Results.Ok(id);
         })
         .WithName("UpdateRaid")
         .Produces(StatusCodes.Status204NoContent)

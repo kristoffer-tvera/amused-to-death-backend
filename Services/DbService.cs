@@ -70,7 +70,7 @@ public class DbService(IConfiguration configuration)
                 LogsUrl TEXT NOT NULL,
                 Comment TEXT,
                 Alts TEXT,
-                CangeKey TEXT NOT NULL,
+                ChangeKey TEXT NOT NULL,
                 AddedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
                 ChangedDate DATETIME DEFAULT CURRENT_TIMESTAMP
             );
