@@ -13,6 +13,13 @@ public static class ApplicationEndpoints
     {
         app.MapGet("/applications", async (DbService dbService) =>
         {
+            var applications = await dbService.GetAll<Application>();
+
+            foreach (var application in applications)
+            {
+                application.ChangeKey = "";
+            }
+
             return await dbService.GetAll<Application>();
         })
         .WithName("Get all applications")
@@ -24,21 +31,25 @@ public static class ApplicationEndpoints
 
         app.MapGet("/applications/{id}", async (DbService dbService, int id) =>
         {
-            return await dbService.Get<Application>(id);
+            var application = await dbService.Get<Application>(id);
+            application.ChangeKey = "";
+            return application;
         })
         .WithName("Get application by id")
         .Produces<Application>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status500InternalServerError)
         .WithOpenApi()
-        .WithTags("Applications")
-        .RequireAuthorization();
+        .WithTags("Applications");
+        // .RequireAuthorization();
 
         app.MapPost("/applications", async (DbService dbService, Application application) =>
         {
+            application.ChangeKey = Guid.NewGuid().ToString();
             application.AddedDate = DateTime.UtcNow;
             application.ChangedDate = DateTime.UtcNow;
-            return await dbService.Insert(application);
+            application.Id = await dbService.Insert(application);
+            return Results.Created($"/applications/{application.Id}", application);
         })
         .WithName("Create application")
         .Produces<Application>(StatusCodes.Status201Created)
